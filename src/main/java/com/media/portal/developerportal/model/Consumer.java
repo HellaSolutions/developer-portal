@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -38,6 +39,9 @@ public class Consumer {
 
     @CreatedDate
     private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
 
     public Long getId() {
         return id;
@@ -74,6 +78,8 @@ public class Consumer {
     public Instant getCreatedAt() {
         return createdAt;
     }
+
+    public Instant getUpdatedAt() { return updatedAt; }
 
     @Override
     public boolean equals(Object o) {
