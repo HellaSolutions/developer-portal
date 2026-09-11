@@ -43,6 +43,10 @@ public class Consumer {
         return id;
     }
 
+    private Object getUuid() {
+        return this.uuid;
+    }
+
     public String getName() {
         return name;
     }
@@ -78,7 +82,7 @@ public class Consumer {
         if (o == null) return false;
         Class<?> oClass = Hibernate.getClass(o);
         if (Hibernate.getClass(this) != oClass) return false;
-        Api api = (Api) o;
+        Consumer api = (Consumer) o;
         return Objects.equals(this.uuid, api.getUuid());
     }
 

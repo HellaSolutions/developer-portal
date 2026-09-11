@@ -23,6 +23,7 @@ public class ApiKey {
     )
     private Long id;
 
+
     @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid = UUID.randomUUID();
 
@@ -45,6 +46,10 @@ public class ApiKey {
 
     public Long getId() {
         return id;
+    }
+
+    private Object getUuid() {
+        return uuid;
     }
 
     public String getKeyHash() {
@@ -102,7 +107,7 @@ public class ApiKey {
         if (o == null) return false;
         Class<?> oClass = Hibernate.getClass(o);
         if (Hibernate.getClass(this) != oClass) return false;
-        Api api = (Api) o;
+        ApiKey api = (ApiKey) o;
         return Objects.equals(this.uuid, api.getUuid());
     }
 

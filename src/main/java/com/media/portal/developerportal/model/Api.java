@@ -35,7 +35,6 @@ public class Api {
     private String basePath;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ApiStatus status = ApiStatus.DRAFT;
 
     @Column(nullable = false)
@@ -84,7 +83,7 @@ public class Api {
             throw new IllegalStateTransitionException(
                     String.format("Illegal transition for API %s status %s -> %s", this.name, this.status, ApiStatus.PUBLISHED));
         }
-        if (this.openApiSpec == null) {
+        if (this.openApiSpec.isBlank()) {
             throw new IllegalStateTransitionException(
                     String.format("Cannot publish the API %s, missed OpenApi spec", this.name));
         }

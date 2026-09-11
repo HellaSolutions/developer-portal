@@ -89,10 +89,6 @@ public class Subscription {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     @Override
     public boolean equals(Object o) {
 
@@ -100,7 +96,7 @@ public class Subscription {
         if (o == null) return false;
         Class<?> oClass = Hibernate.getClass(o);
         if (Hibernate.getClass(this) != oClass) return false;
-        Api api = (Api) o;
+        Subscription api = (Subscription) o;
         return Objects.equals(this.uuid, api.getUuid());
     }
 
