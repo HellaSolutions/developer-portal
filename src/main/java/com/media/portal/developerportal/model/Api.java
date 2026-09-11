@@ -1,13 +1,15 @@
 package com.media.portal.developerportal.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Objects;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 //Api — id, name (unique), basePath (unique, e.g. /scopus/v1), status (DRAFT | PUBLISHED | DEPRECATED), ownerTeam, openApiSpec (text), createdAt, updatedAt.
 public class Api {
 
@@ -18,25 +20,24 @@ public class Api {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Pattern(regexp = "^/[a-z0-9-]+/v[0-9]+$", message = "\"basePath must have the format /name/vN\"")
     @Column(unique = true, nullable = false)
     private String basePath;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ApiStatus status;
+    @Column(nullable = false, columnDefinition = "TEXT DEFAULT 'DRAFT'")
+    private ApiStatus status ;
 
     @Column(nullable = false)
     private String ownerTeam;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String openApiSpec;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public Long getId() {
         return id;
@@ -62,10 +63,6 @@ public class Api {
         return status;
     }
 
-    public void setStatus(ApiStatus status) {
-        this.status = status;
-    }
-
     public String getOwnerTeam() {
         return ownerTeam;
     }
@@ -82,19 +79,31 @@ public class Api {
         this.openApiSpec = openApiSpec;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Api api = (Api) o;
+        return Objects.equals(id, api.id) && Objects.equals(name, api.name) && Objects.equals(basePath, api.basePath) && status == api.status && Objects.equals(ownerTeam, api.ownerTeam) && Objects.equals(openApiSpec, api.openApiSpec) && Objects.equals(createdAt, api.createdAt) && Objects.equals(updatedAt, api.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, basePath, status, ownerTeam, openApiSpec, createdAt, updatedAt);
     }
 }

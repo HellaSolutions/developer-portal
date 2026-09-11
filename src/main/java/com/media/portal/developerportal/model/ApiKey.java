@@ -2,10 +2,13 @@ package com.media.portal.developerportal.model;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Objects;
 
+@Entity
+@EntityListeners(AuditingEntityListener.class)
 //ApiKey — belongs to a subscription: id, keyHash, prefix (first 8 chars, for display), createdAt, expiresAt, revokedAt. The raw key is returned once at creation and never stored.
 public class ApiKey {
 
@@ -24,12 +27,22 @@ public class ApiKey {
     private Subscription subscription;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    @LastModifiedDate
-    private LocalDateTime expiresAt;
+    private Instant expiresAt;
 
     @Column
-    private LocalDateTime revokedAt;
+    private Instant revokedAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ApiKey apiKey = (ApiKey) o;
+        return Objects.equals(id, apiKey.id) && Objects.equals(keyHash, apiKey.keyHash) && Objects.equals(prefix, apiKey.prefix) && Objects.equals(subscription, apiKey.subscription) && Objects.equals(createdAt, apiKey.createdAt) && Objects.equals(expiresAt, apiKey.expiresAt) && Objects.equals(revokedAt, apiKey.revokedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, keyHash, prefix, subscription, createdAt, expiresAt, revokedAt);
+    }
 }
