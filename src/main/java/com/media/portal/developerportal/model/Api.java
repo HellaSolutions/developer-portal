@@ -24,7 +24,7 @@ public class Api {
     private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
-    private final UUID uuid = UUID.randomUUID();
+    private UUID uuid = UUID.randomUUID();
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -39,7 +39,7 @@ public class Api {
     @Column(nullable = false)
     private String ownerTeam;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String openApiSpec;
 
     @CreatedDate
@@ -76,12 +76,29 @@ public class Api {
         return uuid;
     }
 
+    public void publish(){
+        var legal = this.status == ApiStatus.DRAFT;
+        if (!legal) {
+            throw new IllegalStateTransitionException(
+                    String.format("Illegal transition for API status %s -> %s", this.status, status));
+        }
+        this.status = ApiStatus.PUBLISHED;
+    }
+
+    public void deprecate(){
+        var legal = this.status == ApiStatus.PUBLISHED;
+        if (!legal) {
+            throw new IllegalStateTransitionException(
+                    String.format("Illegal transition for API status %s -> %s", this.status, status));
+        }
+        this.status = ApiStatus.DEPRECATED;
+    }
+
+
     public void setStatus(ApiStatus status) throws IllegalStateTransitionException {
-        var illegal =
-                (this.status != ApiStatus.DRAFT && status == ApiStatus.DRAFT) ||
-                (this.status == ApiStatus.PUBLISHED && status != ApiStatus.DEPRECATED) ||
-                (this.status == ApiStatus.DRAFT && status != ApiStatus.PUBLISHED);
-        if (illegal) {
+        var legal = (this.status == ApiStatus.DRAFT && status == ApiStatus.PUBLISHED) ||
+                (this.status == ApiStatus.PUBLISHED && status == ApiStatus.DEPRECATED);
+        if (!legal) {
             throw new IllegalStateTransitionException(
                     String.format("Illegal transition for API status %s -> %s", this.status, status));
         }
@@ -114,7 +131,6 @@ public class Api {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
         Api api = (Api) o;
         return Objects.equals(uuid, api.uuid);
     }

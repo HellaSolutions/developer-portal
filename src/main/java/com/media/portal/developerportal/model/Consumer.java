@@ -24,7 +24,7 @@ public class Consumer {
     private  Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
-    private final UUID uuid = UUID.randomUUID();
+    private UUID uuid = UUID.randomUUID();
 
     @Column(nullable = false)
     private  String name;
@@ -72,7 +72,6 @@ public class Consumer {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
         Consumer consumer = (Consumer) o;
         return Objects.equals(uuid, consumer.uuid);
     }

@@ -23,7 +23,7 @@ public class ApiKey {
     private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
-    private final UUID uuid = UUID.randomUUID();
+    private UUID uuid = UUID.randomUUID();
 
     @Column(unique = true, nullable = false)
     private String keyHash;
@@ -44,10 +44,6 @@ public class ApiKey {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getKeyHash() {
@@ -100,7 +96,6 @@ public class ApiKey {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
         ApiKey apiKey = (ApiKey) o;
         return Objects.equals(uuid, apiKey.uuid);
     }

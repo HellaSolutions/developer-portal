@@ -1,8 +1,6 @@
 package com.media.portal.developerportal.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,7 +23,7 @@ public class Subscription {
     private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
-    private final UUID uuid = UUID.randomUUID();
+    private UUID uuid = UUID.randomUUID();
 
     @ManyToOne
     @JoinColumn(name = "consumer_id", nullable = false)
@@ -44,12 +42,62 @@ public class Subscription {
     private SubscriptionStatus status;
 
     @CreatedDate
-    Instant createdAt;
+    public Instant createdAt;
 
+    public Long getId() {
+        return id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public Consumer getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(Consumer consumer) {
+        this.consumer = consumer;
+    }
+
+    public Api getApi() {
+        return api;
+    }
+
+    public void setApi(Api api) {
+        this.api = api;
+    }
+
+    public SubscriptionType getPlan() {
+        return plan;
+    }
+
+    public void setPlan(SubscriptionType plan) {
+        this.plan = plan;
+    }
+
+    public SubscriptionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SubscriptionStatus status) {
+        this.status = status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
         Subscription that = (Subscription) o;
         return Objects.equals(uuid, that.uuid);
     }
