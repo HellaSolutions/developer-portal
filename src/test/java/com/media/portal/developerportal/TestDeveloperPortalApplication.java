@@ -1,9 +1,6 @@
 package com.media.portal.developerportal;
 
 import org.springframework.boot.SpringApplication;
-import org.testcontainers.containers.PostgreSQLContainer;
-
-import java.util.List;
 
 public class TestDeveloperPortalApplication {
 
