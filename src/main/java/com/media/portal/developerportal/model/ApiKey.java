@@ -1,6 +1,7 @@
 package com.media.portal.developerportal.model;
 
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -96,8 +97,13 @@ public class ApiKey {
 
     @Override
     public boolean equals(Object o) {
-        ApiKey apiKey = (ApiKey) o;
-        return Objects.equals(uuid, apiKey.uuid);
+
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oClass = Hibernate.getClass(o);
+        if (Hibernate.getClass(this) != oClass) return false;
+        Api api = (Api) o;
+        return Objects.equals(this.uuid, api.getUuid());
     }
 
     @Override
