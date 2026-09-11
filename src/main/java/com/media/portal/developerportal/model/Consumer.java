@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -22,10 +23,12 @@ public class Consumer {
     )
     private  Long id;
 
+    @Column(nullable = false, unique = true, updatable = false)
+    private final UUID uuid = UUID.randomUUID();
+
     @Column(nullable = false)
     private  String name;
 
-    @Email
     @Column(unique = true, nullable = false)
     private  String email;
 
@@ -63,7 +66,7 @@ public class Consumer {
         this.organisation = organisation;
     }
 
-    public Instant getCreateAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
@@ -71,11 +74,11 @@ public class Consumer {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Consumer consumer = (Consumer) o;
-        return Objects.equals(id, consumer.id) && Objects.equals(name, consumer.name) && Objects.equals(email, consumer.email) && Objects.equals(organisation, consumer.organisation) && Objects.equals(createdAt, consumer.createdAt);
+        return Objects.equals(uuid, consumer.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, organisation, createdAt);
+        return Objects.hashCode(uuid);
     }
 }

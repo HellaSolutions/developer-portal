@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -22,6 +23,9 @@ public class Api {
     )
     private Long id;
 
+    @Column(nullable = false, unique = true, updatable = false)
+    private final UUID uuid = UUID.randomUUID();
+
     @Column(unique = true, nullable = false)
     private String name;
 
@@ -29,8 +33,8 @@ public class Api {
     private String basePath;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "TEXT DEFAULT 'DRAFT'")
-    private ApiStatus status ;
+    @Column(nullable = false)
+    private ApiStatus status = ApiStatus.DRAFT;
 
     @Column(nullable = false)
     private String ownerTeam;
@@ -68,6 +72,22 @@ public class Api {
         return status;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setStatus(ApiStatus status) throws IllegalStateTransitionException {
+        var illegal =
+                (this.status != ApiStatus.DRAFT && status == ApiStatus.DRAFT) ||
+                (this.status == ApiStatus.PUBLISHED && status != ApiStatus.DEPRECATED) ||
+                (this.status == ApiStatus.DRAFT && status != ApiStatus.PUBLISHED);
+        if (illegal) {
+            throw new IllegalStateTransitionException(
+                    String.format("Illegal transition for API status %s -> %s", this.status, status));
+        }
+        this.status = status;
+    }
+
     public String getOwnerTeam() {
         return ownerTeam;
     }
@@ -92,16 +112,15 @@ public class Api {
         return updatedAt;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Api api = (Api) o;
-        return Objects.equals(id, api.id) && Objects.equals(name, api.name) && Objects.equals(basePath, api.basePath) && status == api.status && Objects.equals(ownerTeam, api.ownerTeam) && Objects.equals(openApiSpec, api.openApiSpec) && Objects.equals(createdAt, api.createdAt) && Objects.equals(updatedAt, api.updatedAt);
+        return Objects.equals(uuid, api.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, basePath, status, ownerTeam, openApiSpec, createdAt, updatedAt);
+        return Objects.hashCode(uuid);
     }
 }

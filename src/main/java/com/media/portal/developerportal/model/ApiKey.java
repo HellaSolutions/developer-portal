@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -20,6 +21,9 @@ public class ApiKey {
             allocationSize = 50
     )
     private Long id;
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private final UUID uuid = UUID.randomUUID();
 
     @Column(unique = true, nullable = false)
     private String keyHash;
@@ -36,20 +40,73 @@ public class ApiKey {
 
     private Instant expiresAt;
 
-    @Column
     private Instant revokedAt;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getKeyHash() {
+        return keyHash;
+    }
+
+    public void setKeyHash(String keyHash) {
+        this.keyHash = keyHash;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public Instant getRevokedAt() {
+        return revokedAt;
+    }
+
+    public void setRevokedAt(Instant revokedAt) {
+        this.revokedAt = revokedAt;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ApiKey apiKey = (ApiKey) o;
-        return Objects.equals(id, apiKey.id) && Objects.equals(keyHash, apiKey.keyHash) && Objects.equals(prefix, apiKey.prefix) && Objects.equals(subscription, apiKey.subscription) && Objects.equals(createdAt, apiKey.createdAt) && Objects.equals(expiresAt, apiKey.expiresAt) && Objects.equals(revokedAt, apiKey.revokedAt);
+        return Objects.equals(uuid, apiKey.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, keyHash, prefix, subscription, createdAt, expiresAt, revokedAt);
+        return Objects.hashCode(uuid);
     }
 }

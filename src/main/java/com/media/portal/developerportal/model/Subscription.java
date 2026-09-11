@@ -2,11 +2,13 @@ package com.media.portal.developerportal.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -22,22 +24,21 @@ public class Subscription {
     )
     private Long id;
 
-    @NotNull
+    @Column(nullable = false, unique = true, updatable = false)
+    private final UUID uuid = UUID.randomUUID();
+
     @ManyToOne
     @JoinColumn(name = "consumer_id", nullable = false)
     private Consumer consumer;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "api_id", nullable = false)
-    private Consumer api;
+    private Api api;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SubscriptionType plan;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SubscriptionStatus status;
@@ -50,11 +51,11 @@ public class Subscription {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Subscription that = (Subscription) o;
-        return Objects.equals(id, that.id) && Objects.equals(consumer, that.consumer) && Objects.equals(api, that.api) && plan == that.plan && status == that.status && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(uuid, that.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, consumer, api, plan, status, createdAt);
+        return Objects.hashCode(uuid);
     }
 }
