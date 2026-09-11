@@ -96,8 +96,8 @@ public class Subscription {
         if (o == null) return false;
         Class<?> oClass = Hibernate.getClass(o);
         if (Hibernate.getClass(this) != oClass) return false;
-        Subscription api = (Subscription) o;
-        return Objects.equals(this.uuid, api.getUuid());
+        Subscription c = (Subscription) o;
+        return Objects.equals(this.uuid, c.getUuid());
     }
 
     @Override

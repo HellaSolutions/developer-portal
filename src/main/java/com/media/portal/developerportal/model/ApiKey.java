@@ -48,7 +48,7 @@ public class ApiKey {
         return id;
     }
 
-    public Object getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
@@ -107,8 +107,8 @@ public class ApiKey {
         if (o == null) return false;
         Class<?> oClass = Hibernate.getClass(o);
         if (Hibernate.getClass(this) != oClass) return false;
-        ApiKey api = (ApiKey) o;
-        return Objects.equals(this.uuid, api.getUuid());
+        ApiKey c = (ApiKey) o;
+        return Objects.equals(this.uuid, c.getUuid());
     }
 
     @Override

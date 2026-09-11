@@ -2,7 +2,6 @@ package com.media.portal.developerportal.model;
 
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -131,8 +130,8 @@ public class Api {
         if (o == null) return false;
         Class<?> oClass = Hibernate.getClass(o);
         if (Hibernate.getClass(this) != oClass) return false;
-        Api api = (Api) o;
-        return Objects.equals(this.uuid, api.getUuid());
+        Api c = (Api) o;
+        return Objects.equals(this.uuid, c.getUuid());
     }
 
     @Override
