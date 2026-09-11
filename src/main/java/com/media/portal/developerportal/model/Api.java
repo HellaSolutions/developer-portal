@@ -80,7 +80,11 @@ public class Api {
         var legal = this.status == ApiStatus.DRAFT;
         if (!legal) {
             throw new IllegalStateTransitionException(
-                    String.format("Illegal transition for API status %s -> %s", this.status, status));
+                    String.format("Illegal transition for API %s status %s -> %s", this.name, this.status, ApiStatus.PUBLISHED));
+        }
+        if (this.openApiSpec == null) {
+            throw new IllegalStateTransitionException(
+                    String.format("Cannot publish the API %s, missed OpenApi spec", this.name));
         }
         this.status = ApiStatus.PUBLISHED;
     }
@@ -89,20 +93,9 @@ public class Api {
         var legal = this.status == ApiStatus.PUBLISHED;
         if (!legal) {
             throw new IllegalStateTransitionException(
-                    String.format("Illegal transition for API status %s -> %s", this.status, status));
+                    String.format("Illegal transition for API status %s -> %s", this.status, ApiStatus.DEPRECATED));
         }
         this.status = ApiStatus.DEPRECATED;
-    }
-
-
-    public void setStatus(ApiStatus status) throws IllegalStateTransitionException {
-        var legal = (this.status == ApiStatus.DRAFT && status == ApiStatus.PUBLISHED) ||
-                (this.status == ApiStatus.PUBLISHED && status == ApiStatus.DEPRECATED);
-        if (!legal) {
-            throw new IllegalStateTransitionException(
-                    String.format("Illegal transition for API status %s -> %s", this.status, status));
-        }
-        this.status = status;
     }
 
     public String getOwnerTeam() {

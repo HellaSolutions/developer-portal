@@ -42,7 +42,7 @@ public class Subscription {
     private SubscriptionStatus status;
 
     @CreatedDate
-    public Instant createdAt;
+    private Instant createdAt;
 
     public Long getId() {
         return id;
@@ -50,10 +50,6 @@ public class Subscription {
 
     public UUID getUuid() {
         return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     public Consumer getConsumer() {
