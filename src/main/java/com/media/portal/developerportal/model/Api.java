@@ -14,7 +14,12 @@ import java.util.Objects;
 public class Api {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "api_seq")
+    @SequenceGenerator(
+            name = "api_seq",
+            sequenceName = "api_seq",
+            allocationSize = 50
+    )
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -83,17 +88,10 @@ public class Api {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     @Override
     public boolean equals(Object o) {

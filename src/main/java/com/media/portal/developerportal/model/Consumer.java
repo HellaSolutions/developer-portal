@@ -14,7 +14,12 @@ import java.util.Objects;
 public class Consumer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consumer_seq")
+    @SequenceGenerator(
+            name = "consumer_seq",
+            sequenceName = "consumer_seq",
+            allocationSize = 50
+    )
     private  Long id;
 
     @Column(nullable = false)
@@ -60,10 +65,6 @@ public class Consumer {
 
     public Instant getCreateAt() {
         return createdAt;
-    }
-
-    public void setCreateAt(Instant createAt) {
-        this.createdAt = createAt;
     }
 
     @Override

@@ -13,7 +13,12 @@ import java.util.Objects;
 public class ApiKey {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "apikey_seq")
+    @SequenceGenerator(
+            name = "apikey_seq",
+            sequenceName = "apikey_seq",
+            allocationSize = 50
+    )
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -33,6 +38,8 @@ public class ApiKey {
 
     @Column
     private Instant revokedAt;
+
+
 
     @Override
     public boolean equals(Object o) {

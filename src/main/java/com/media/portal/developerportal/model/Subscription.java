@@ -14,7 +14,12 @@ import java.util.Objects;
 public class Subscription {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscription_seq")
+    @SequenceGenerator(
+            name = "subscription_seq",
+            sequenceName = "subscription_seq",
+            allocationSize = 50
+    )
     private Long id;
 
     @NotNull
