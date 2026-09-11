@@ -30,7 +30,7 @@ public class ApiKey {
     @Column(unique = true, nullable = false)
     private String keyHash;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 8)
     private String prefix;
 
     @ManyToOne

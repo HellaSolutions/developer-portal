@@ -35,11 +35,11 @@ public class Subscription {
     private Api api;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private SubscriptionType plan;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private SubscriptionStatus status;
 
     @CreatedDate

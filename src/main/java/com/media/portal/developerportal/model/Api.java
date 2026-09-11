@@ -34,7 +34,7 @@ public class Api {
     private String basePath;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private ApiStatus status = ApiStatus.DRAFT;
 
     @Column(nullable = false)
