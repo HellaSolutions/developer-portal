@@ -48,7 +48,7 @@ public class ApiKey {
         return id;
     }
 
-    private Object getUuid() {
+    public Object getUuid() {
         return uuid;
     }
 

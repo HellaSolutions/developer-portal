@@ -43,7 +43,7 @@ public class Consumer {
         return id;
     }
 
-    private Object getUuid() {
+    public Object getUuid() {
         return this.uuid;
     }
 
