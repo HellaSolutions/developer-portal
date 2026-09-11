@@ -8,7 +8,7 @@ CREATE TABLE api
     uuid          UUID         NOT NULL UNIQUE,
     name          VARCHAR(255) NOT NULL UNIQUE,
     base_path     VARCHAR(255) NOT NULL UNIQUE,
-    status        VARCHAR(20)  NOT NULL,
+    status        VARCHAR(255)  NOT NULL,
     owner_team    VARCHAR(255) NOT NULL,
     open_api_spec TEXT,
     created_at    TIMESTAMP WITH TIME ZONE,
@@ -40,8 +40,8 @@ CREATE TABLE subscription
     uuid          UUID         NOT NULL UNIQUE,
     consumer_id   BIGINT       NOT NULL,
     api_id        BIGINT       NOT NULL,
-    plan          VARCHAR(20)  NOT NULL,
-    status        VARCHAR(20)  NOT NULL,
+    plan          VARCHAR(255)  NOT NULL,
+    status        VARCHAR(255)  NOT NULL,
     created_at    TIMESTAMP WITH TIME ZONE,
 
     CONSTRAINT fk_subscription_consumer FOREIGN KEY (consumer_id)
@@ -59,8 +59,8 @@ CREATE TABLE api_key
 (
     id              BIGINT       NOT NULL PRIMARY KEY,
     uuid            UUID         NOT NULL UNIQUE,
-    key_hash         VARCHAR(255) NOT NULL UNIQUE,
-    prefix          VARCHAR(255) NOT NULL UNIQUE,
+    key_hash        VARCHAR(255) NOT NULL UNIQUE,
+    prefix          VARCHAR(8) NOT NULL,
     subscription_id BIGINT       NOT NULL,
     created_at      TIMESTAMP WITH TIME ZONE,
     expires_at      TIMESTAMP WITH TIME ZONE,
