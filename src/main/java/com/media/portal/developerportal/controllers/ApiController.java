@@ -56,8 +56,7 @@ public class ApiController {
         return ResponseEntity.ok(apis);
     }
 
-    //GET /apis/{id}
-    @GetMapping
+    @GetMapping("/{id}/")
     public ResponseEntity<Api> getApi(@PathVariable Long id) {
         Api api = apiService.getApi(id);
         return ResponseEntity.ok(api);

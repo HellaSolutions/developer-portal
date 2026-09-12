@@ -27,10 +27,10 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         var correlationId = request.getHeader(CORRELATION_ID);
-        if (correlationId == null){
+        if (correlationId == null || correlationId.isBlank()){
             correlationId = UUID.randomUUID().toString();
-            MDC.put(CORRELATION_ID, correlationId);
         }
+        MDC.put(CORRELATION_ID, correlationId);
         response.setHeader(CORRELATION_ID, correlationId);
         try {
             chain.doFilter(request, response);   // must call this, or the request stops here

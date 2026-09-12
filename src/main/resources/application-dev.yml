@@ -4,3 +4,9 @@ management:
       export:
         enabled: false
 
+logging:
+  structured:
+    format:
+      console: ""
+  level:
+    com.media.portal: DEBUG
