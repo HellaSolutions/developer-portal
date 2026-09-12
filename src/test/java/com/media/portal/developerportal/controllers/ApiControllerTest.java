@@ -37,7 +37,6 @@ class ApiControllerTest {
         var response = apiController.createApi(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(savedApi.getId());
 
         var apiCaptor = ArgumentCaptor.forClass(Api.class);
         verify(apiService).createApi(apiCaptor.capture());

@@ -3,6 +3,7 @@ package com.media.portal.developerportal.controllers;
 
 import com.media.portal.developerportal.controllers.dto.CreateApiRequest;
 import com.media.portal.developerportal.model.Api;
+import com.media.portal.developerportal.model.ApiStatus;
 import com.media.portal.developerportal.services.ApiService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -49,10 +50,16 @@ public class ApiController {
 
     @GetMapping
     public ResponseEntity<Page<Api>> listApis(
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) ApiStatus status,
             Pageable pageable) {
         Page<Api> apis = apiService.listApis(status, pageable);
         return ResponseEntity.ok(apis);
     }
 
+    //GET /apis/{id}
+    @GetMapping
+    public ResponseEntity<Api> getApi(@PathVariable Long id) {
+        Api api = apiService.getApi(id);
+        return ResponseEntity.ok(api);
+    }
 }

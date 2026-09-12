@@ -33,13 +33,17 @@ public class ApiService {
         var api = apiRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("API with id %s not found", id)));
         api.deprecate();
-        apiRepository.save(api);
     }
 
-    public Page<Api> listApis(String status, Pageable pageable) {
+    public Page<Api> listApis(ApiStatus status, Pageable pageable) {
         if (status != null) {
-            return apiRepository.findAllByStatus(ApiStatus.valueOf(status), pageable);
+            return apiRepository.findAllByStatus(status, pageable);
         }
         return apiRepository.findAll(pageable);
+    }
+
+    public Api getApi(Long id) {
+        return apiRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("API with id %s not found", id)));
     }
 }

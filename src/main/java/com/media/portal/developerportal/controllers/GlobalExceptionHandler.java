@@ -1,7 +1,6 @@
 package com.media.portal.developerportal.controllers;
 
 import com.media.portal.developerportal.model.IllegalStateTransitionException;
-import com.media.portal.developerportal.services.BadApiRequestException;
 import com.media.portal.developerportal.services.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -57,20 +56,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         problemDetail.setTitle("Resource Not Found");
         problemDetail.setType(URI.create("https://api.example.com/errors/not-found"));
-        problemDetail.setProperty("timestamp", Instant.now());
-
-        return problemDetail;
-    }
-
-    @ExceptionHandler(BadApiRequestException.class)
-    public ProblemDetail handleBadApiRequestException(BadApiRequestException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage()
-        );
-
-        problemDetail.setTitle("Bad request");
-        problemDetail.setType(URI.create("https://api.example.com/errors/bad-request"));
         problemDetail.setProperty("timestamp", Instant.now());
 
         return problemDetail;
