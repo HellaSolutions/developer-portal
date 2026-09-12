@@ -1,0 +1,4 @@
+spring:
+  webmvc:
+    problemdetails:
+      enabled:true

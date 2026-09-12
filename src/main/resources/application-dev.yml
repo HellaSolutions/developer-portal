@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+management:
+  newrelic:
+    metrics:
+      export:
+        enabled: false
+
