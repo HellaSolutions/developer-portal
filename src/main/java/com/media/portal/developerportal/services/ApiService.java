@@ -1,8 +1,11 @@
 package com.media.portal.developerportal.services;
 
+import com.media.portal.developerportal.controllers.ApiController;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.model.ApiStatus;
 import com.media.portal.developerportal.repositories.ApiRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ApiService {
+
+    private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
     private final ApiRepository apiRepository;
 
