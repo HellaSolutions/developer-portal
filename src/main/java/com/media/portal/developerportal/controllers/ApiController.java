@@ -1,8 +1,10 @@
 package com.media.portal.developerportal.controllers;
 
 
+import com.media.portal.developerportal.controllers.dto.CreateApiRequest;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.services.ApiService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,20 +22,28 @@ public class ApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createApi(@RequestBody Api api) {
+    public ResponseEntity<Long> createApi(@Valid @RequestBody CreateApiRequest request) {
+        var api = new Api();
+        api.setName(request.name());
+        api.setBasePath(request.basePath());
+        api.setOwnerTeam(request.ownerTeam());
+        api.setOpenApiSpec(request.openApiSpec());
+
         var savedApi = apiService.createApi(api);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedApi.getId());
+        var id = savedApi.getId();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Location", String.format("/v1/apis/%s", id)).body(id);
     }
 
     @PostMapping("/{id}/publish")
     public ResponseEntity<Void> publishApi(@PathVariable Long id) {
-        var api = apiService.publishApi(id);
+        apiService.publishApi(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/{id}/deprecate")
     public ResponseEntity<Void> deprecateApi(@PathVariable Long id) {
-        var api = apiService.deprecateApi(id);
+        apiService.deprecateApi(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

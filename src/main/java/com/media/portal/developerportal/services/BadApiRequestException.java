@@ -1,4 +1,4 @@
-package com.media.portal.developerportal.controllers;
+package com.media.portal.developerportal.services;
 
 public class BadApiRequestException extends RuntimeException {
     public BadApiRequestException(String format) {

@@ -1,7 +1,5 @@
 package com.media.portal.developerportal.services;
 
-import com.media.portal.developerportal.controllers.BadApiRequestException;
-import com.media.portal.developerportal.controllers.ResourceNotFoundException;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.repositories.ApiRepository;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +25,7 @@ class ApiServiceTest {
     private ApiService apiService;
 
     @Test
-    void createApi_savesAndReturnsIt_whenNameAndBasePathAreValid() {
+    void createApi_savesAndReturnsIt() {
         var api = new Api();
         api.setName("Scopus API");
         api.setBasePath("/scopus/v1");
@@ -38,17 +35,6 @@ class ApiServiceTest {
 
         assertThat(result).isSameAs(api);
         verify(apiRepository).save(api);
-    }
-
-    @Test
-    void createApi_throwsBadApiRequestException_whenBasePathDoesNotMatchPattern() {
-        var api = new Api();
-        api.setName("Scopus API");
-        api.setBasePath("not-a-valid-path");
-
-        assertThrows(BadApiRequestException.class, () -> apiService.createApi(api));
-
-        verifyNoInteractions(apiRepository);
     }
 
     @Test
