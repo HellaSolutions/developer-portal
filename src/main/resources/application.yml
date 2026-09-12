@@ -1,4 +1,6 @@
 spring:
-  webmvc:
-    problemdetails:
-      enabled:true
+  application:
+    name: "developer-portal"
+  jpa:
+    hibernate:
+      ddl-auto: "validate"

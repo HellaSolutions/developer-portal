@@ -1,6 +1,7 @@
 package com.media.portal.developerportal.controllers;
 
 import com.media.portal.developerportal.model.IllegalStateTransitionException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -64,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IllegalStateTransitionException.class)
     public ProblemDetail handleIllegalStateTransitionException(IllegalStateTransitionException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.CONFLICT,
                 ex.getMessage()
         );
 
@@ -74,5 +75,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return problemDetail;
     }
-
 }

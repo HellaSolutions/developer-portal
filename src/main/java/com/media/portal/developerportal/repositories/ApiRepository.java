@@ -15,8 +15,6 @@ import java.util.Optional;
 @Repository
 public interface ApiRepository extends JpaRepository<Api, Long> {
 
-    @Query(value = "SELECT api FROM Api api WHERE api.name = :name LIMIT 1", nativeQuery = true)
-    List<Api> nameExists(@Param("name") String name);
-
-    Page<Api> findAll(String status, Pageable pageable);
+    @Query("SELECT a FROM Api a WHERE a.status = :status")
+    Page<Api> findAllByStatus(@Param("status") String status, Pageable pageable);
 }
