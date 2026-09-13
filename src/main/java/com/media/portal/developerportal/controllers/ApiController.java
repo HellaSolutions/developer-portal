@@ -1,7 +1,7 @@
 package com.media.portal.developerportal.controllers;
 
 
-import com.media.portal.developerportal.controllers.dto.CreateApiRequest;
+import com.media.portal.developerportal.controllers.dto.ApiCreateRequest;
 import com.media.portal.developerportal.controllers.dto.ApiResponse;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.model.ApiStatus;
@@ -29,7 +29,7 @@ public class ApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createApi(@Valid @RequestBody CreateApiRequest request) {
+    public ResponseEntity<Long> createApi(@Valid @RequestBody ApiCreateRequest request) {
         var api = new Api();
         api.setName(request.name());
         api.setBasePath(request.basePath());

@@ -1,6 +1,6 @@
 package com.media.portal.developerportal.controllers;
 
-import com.media.portal.developerportal.controllers.dto.CreateApiRequest;
+import com.media.portal.developerportal.controllers.dto.ApiCreateRequest;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.services.ApiService;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class ApiControllerTest {
 
     @Test
     void createApi_returns201WithSavedId_whenServiceSucceeds() {
-        var request = new CreateApiRequest("Scopus API", "/scopus/v1", "Search Team", null);
+        var request = new ApiCreateRequest("Scopus API", "/scopus/v1", "Search Team", null);
 
         var savedApi = new Api();
         savedApi.setName("Scopus API");

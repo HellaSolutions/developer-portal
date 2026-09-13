@@ -1,26 +1,19 @@
 package com.media.portal.developerportal.services;
 
-import com.media.portal.developerportal.controllers.dto.CreateKeyResponse;
+import com.media.portal.developerportal.controllers.dto.ApiKeyCreateResponse;
 import com.media.portal.developerportal.model.*;
 import com.media.portal.developerportal.repositories.ApiRepository;
 import com.media.portal.developerportal.repositories.ApyKeyRepository;
 import com.media.portal.developerportal.repositories.ConsumerRepository;
 import com.media.portal.developerportal.repositories.SubscriptionRepository;
 import com.media.portal.developerportal.utils.TokenUtil;
-import jakarta.persistence.LockModeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SubscriptionService {
@@ -66,7 +59,7 @@ public class SubscriptionService {
     }
 
     @Transactional
-    public CreateKeyResponse generateKey(Long id) {
+    public ApiKeyCreateResponse generateKey(Long id) {
 
         var subscription = subscriptionRepository.findByIdForUpdate(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Subscription not found, id %s", id)));
@@ -94,7 +87,7 @@ public class SubscriptionService {
         apiKey.setKeyHash(hashed);
         apiKey.setExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS));
         var saved = apikeyRepository.save(apiKey);
-        return new CreateKeyResponse(saved.getId(), plain);
+        return new ApiKeyCreateResponse(saved.getId(), plain);
     }
 
     @Transactional

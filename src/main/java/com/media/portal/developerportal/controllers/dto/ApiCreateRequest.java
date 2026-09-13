@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record CreateApiRequest(
+public record ApiCreateRequest(
 
         @NotBlank(message = "name is required")
         @Size(min = 3, max = 60, message = "name must be between 3 and 60 characters")
