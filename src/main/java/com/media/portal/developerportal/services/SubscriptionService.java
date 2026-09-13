@@ -127,6 +127,4 @@ public class SubscriptionService {
         var basePath = introspection.getBasePath();
         return new Introspection(active, consumerId, apiId, basePath, plan);
     }
-
-
 }
