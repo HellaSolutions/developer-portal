@@ -16,15 +16,4 @@ public interface ApiRepository extends JpaRepository<Api, Long> {
 
     @Query("SELECT a FROM Api a WHERE a.status = :status")
     Page<Api> findAllByStatus(@Param("status") ApiStatus status, Pageable pageable);
-
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("""
-       UPDATE Api a
-          SET a.status = :newStatus
-        WHERE a.id = :apiId
-          AND a.status = :currentStatus
-       """)
-    int updateApiStatus(@Param("apiId") Long apiId,
-                           @Param("currentStatus") ApiStatus currentStatus,
-                           @Param("newStatus") ApiStatus newStatus);
 }
