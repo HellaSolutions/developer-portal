@@ -1,16 +1,11 @@
 package com.media.portal.developerportal.services;
 
 import com.media.portal.developerportal.model.Consumer;
-import com.media.portal.developerportal.model.SubscriptionType;
-import com.media.portal.developerportal.repositories.ApiRepository;
 import com.media.portal.developerportal.repositories.ConsumerRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class ConsumerService {

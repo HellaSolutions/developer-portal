@@ -1,6 +1,5 @@
 package com.media.portal.developerportal.services;
 
-import com.media.portal.developerportal.controllers.ApiController;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.model.ApiStatus;
 import com.media.portal.developerportal.repositories.ApiRepository;
