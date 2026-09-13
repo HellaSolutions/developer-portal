@@ -47,26 +47,26 @@ service defined in `compose.yaml`.
   subpackage.
 - **Domain model** (`com.media.portal.developerportal.model`), backed by
   `src/main/resources/db/migration/V1__create_api.sql`:
-  - `Api` — id, name (unique), basePath (unique, e.g. `/scopus/v1`), status (`DRAFT`/`PUBLISHED`/
-    `DEPRECATED`), ownerTeam, openApiSpec (text), createdAt/updatedAt. Status is not settable directly;
-    `publish()` and `deprecate()` enforce legal transitions (`publish()` also requires a non-blank
-    `openApiSpec`) and throw `IllegalStateTransitionException` otherwise.
-  - `Consumer` — id, name, email (unique), organisation, createdAt/updatedAt.
-  - `Subscription` — links a `Consumer` to a published `Api`: plan (`SubscriptionType`: `FREE`/`STANDARD`/
-    `PARTNER`), status (`SubscriptionStatus`: `ACTIVE`/`SUSPENDED`/`REVOKED`), createdAt.
-  - `ApiKey` — belongs to a `Subscription`: keyHash, prefix (first chars, for display), createdAt, expiresAt,
-    revokedAt. The raw key is intended to be returned once at creation and never stored — hashing/generation
-    isn't implemented yet, just the storage shape. Table/column names (`api_key`, `key_hash`) must keep
-    matching Hibernate's default snake_case naming for the `ApiKey`/`keyHash` Java names — there's no
-    `@Table`/`@Column(name = ...)` override, so a rename on either side (entity or migration) breaks schema
-    validation.
-  - Every entity uses a `Long` surrogate PK (`@GeneratedValue(SEQUENCE)`, `allocationSize = 50` hi-lo
-    batching via a dedicated `*_seq` sequence) plus a separate immutable `UUID uuid`
-    (`updatable = false`, assigned client-side via `UUID.randomUUID()`) as the stable public identity.
-    `equals`/`hashCode` compare only `uuid`, using `Hibernate.getClass()` (not `instanceof`) so proxy
-    instances compare correctly.
-  - `@EnableJpaAuditing` is active on `DeveloperPortalApplication`, so `@CreatedDate`/`@LastModifiedDate`
-    on entities are live, not decorative.
+    - `Api` — id, name (unique), basePath (unique, e.g. `/scopus/v1`), status (`DRAFT`/`PUBLISHED`/
+      `DEPRECATED`), ownerTeam, openApiSpec (text), createdAt/updatedAt. Status is not settable directly;
+      `publish()` and `deprecate()` enforce legal transitions (`publish()` also requires a non-blank
+      `openApiSpec`) and throw `IllegalStateTransitionException` otherwise.
+    - `Consumer` — id, name, email (unique), organisation, createdAt/updatedAt.
+    - `Subscription` — links a `Consumer` to a published `Api`: plan (`SubscriptionType`: `FREE`/`STANDARD`/
+      `PARTNER`), status (`SubscriptionStatus`: `ACTIVE`/`SUSPENDED`/`REVOKED`), createdAt.
+    - `ApiKey` — belongs to a `Subscription`: keyHash, prefix (first chars, for display), createdAt, expiresAt,
+      revokedAt. The raw key is intended to be returned once at creation and never stored — hashing/generation
+      isn't implemented yet, just the storage shape. Table/column names (`api_key`, `key_hash`) must keep
+      matching Hibernate's default snake_case naming for the `ApiKey`/`keyHash` Java names — there's no
+      `@Table`/`@Column(name = ...)` override, so a rename on either side (entity or migration) breaks schema
+      validation.
+    - Every entity uses a `Long` surrogate PK (`@GeneratedValue(SEQUENCE)`, `allocationSize = 50` hi-lo
+      batching via a dedicated `*_seq` sequence) plus a separate immutable `UUID uuid`
+      (`updatable = false`, assigned client-side via `UUID.randomUUID()`) as the stable public identity.
+      `equals`/`hashCode` compare only `uuid`, using `Hibernate.getClass()` (not `instanceof`) so proxy
+      instances compare correctly.
+    - `@EnableJpaAuditing` is active on `DeveloperPortalApplication`, so `@CreatedDate`/`@LastModifiedDate`
+      on entities are live, not decorative.
 - **Persistence**: `spring-boot-starter-data-jpa` + `postgresql` (runtime driver) + Flyway
   (`flyway-core`, `flyway-database-postgresql` for the Postgres dialect, and
   `spring-boot-starter-flyway` for the Spring Boot autoconfiguration glue — Spring Boot 4 split Flyway's
@@ -75,30 +75,30 @@ service defined in `compose.yaml`.
   `application.properties` means Hibernate never generates DDL itself; the schema comes entirely from
   Flyway migrations under `src/main/resources/db/migration`.
 - **Local/test Postgres**, two separate mechanisms — don't conflate them:
-  - Tests: `spring-boot-testcontainers` + `testcontainers-postgresql` (test scope). See
-    `TestcontainersConfiguration` (a `@TestConfiguration` with a `@ServiceConnection`-annotated
-    `PostgreSQLContainer` bean, imported into `DeveloperPortalApplicationTests`) and
-    `TestDeveloperPortalApplication` (a test-scope `main()` for running the full app locally against the same
-    Testcontainers-managed Postgres instead of `compose.yaml`).
-  - Local run: `spring-boot-docker-compose` (optional dependency) + `compose.yaml` at the repo root, auto-
-    detected by `spring-boot:run`.
-  - Testcontainers 2.x (managed via the `testcontainers-bom` import in `spring-boot-dependencies`) renamed
-    its module artifacts with a `testcontainers-` prefix (e.g. `testcontainers-postgresql`, not
-    `postgresql`) and dropped the generic self-type from container classes — use `PostgreSQLContainer`, not
-    `PostgreSQLContainer<?>`/`new PostgreSQLContainer<>(...)`. Import from `org.testcontainers.postgresql`,
-    not the older `org.testcontainers.containers` package.
+    - Tests: `spring-boot-testcontainers` + `testcontainers-postgresql` (test scope). See
+      `TestcontainersConfiguration` (a `@TestConfiguration` with a `@ServiceConnection`-annotated
+      `PostgreSQLContainer` bean, imported into `DeveloperPortalApplicationTests`) and
+      `TestDeveloperPortalApplication` (a test-scope `main()` for running the full app locally against the same
+      Testcontainers-managed Postgres instead of `compose.yaml`).
+    - Local run: `spring-boot-docker-compose` (optional dependency) + `compose.yaml` at the repo root, auto-
+      detected by `spring-boot:run`.
+    - Testcontainers 2.x (managed via the `testcontainers-bom` import in `spring-boot-dependencies`) renamed
+      its module artifacts with a `testcontainers-` prefix (e.g. `testcontainers-postgresql`, not
+      `postgresql`) and dropped the generic self-type from container classes — use `PostgreSQLContainer`, not
+      `PostgreSQLContainer<?>`/`new PostgreSQLContainer<>(...)`. Import from `org.testcontainers.postgresql`,
+      not the older `org.testcontainers.containers` package.
 - **Web layer**: `spring-boot-starter-web` and `spring-boot-starter-validation` are declared but nothing uses
   them yet — no `@RestController`, no repositories. This is the natural next layer to add on top of the
   domain model.
 - **Observability stack** is pre-wired and should be kept in mind when adding components:
-  - Micrometer tracing via Brave (`spring-boot-micrometer-tracing-brave`,
-    `micrometer-tracing-bridge-brave`).
-  - Metrics via `spring-boot-starter-micrometer-metrics`, exported to **New Relic**
-    (`micrometer-registry-new-relic`, runtime scope) — expect New Relic export config
-    (license key/account id) to be required via env vars or properties, not hardcoded.
-  - DataSource-level observability via `datasource-micrometer-spring-boot`
-    (version pinned through the `datasource-micrometer-bom` in `dependencyManagement`,
-    property `datasource-micrometer.version`).
+    - Micrometer tracing via Brave (`spring-boot-micrometer-tracing-brave`,
+      `micrometer-tracing-bridge-brave`).
+    - Metrics via `spring-boot-starter-micrometer-metrics`, exported to **New Relic**
+      (`micrometer-registry-new-relic`, runtime scope) — expect New Relic export config
+      (license key/account id) to be required via env vars or properties, not hardcoded.
+    - DataSource-level observability via `datasource-micrometer-spring-boot`
+      (version pinned through the `datasource-micrometer-bom` in `dependencyManagement`,
+      property `datasource-micrometer.version`).
 - **Testing**: JUnit 5 via `spring-boot-starter-test` (transitively), plus the tracing- and
   JPA-specific test starters (`spring-boot-micrometer-tracing-test`,
   `spring-boot-starter-data-jpa-test`, `spring-boot-starter-micrometer-metrics-test`) for slice/integration

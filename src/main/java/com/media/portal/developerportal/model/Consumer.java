@@ -22,19 +22,19 @@ public class Consumer {
             sequenceName = "consumer_seq",
             allocationSize = 50
     )
-    private  Long id;
+    private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
     private UUID uuid = UUID.randomUUID();
 
     @Column(nullable = false)
-    private  String name;
+    private String name;
 
     @Column(unique = true, nullable = false)
-    private  String email;
+    private String email;
 
     @Column(nullable = false)
-    private  String organisation;
+    private String organisation;
 
     @CreatedDate
     private Instant createdAt;
@@ -78,7 +78,9 @@ public class Consumer {
         return createdAt;
     }
 
-    public Instant getUpdatedAt() { return updatedAt; }
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 
     @Override
     public boolean equals(Object o) {

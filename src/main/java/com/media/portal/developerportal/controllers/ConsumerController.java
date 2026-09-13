@@ -25,7 +25,7 @@ public class ConsumerController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createApi(@Valid @RequestBody ConsumerCreateRequest request){
+    public ResponseEntity<Long> createApi(@Valid @RequestBody ConsumerCreateRequest request) {
         var consumer = new Consumer();
         consumer.setName(request.name());
         consumer.setEmail(request.email());
@@ -45,7 +45,7 @@ public class ConsumerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ConsumerResponse> getConsumer(@Valid @PathVariable Long id){
+    public ResponseEntity<ConsumerResponse> getConsumer(@Valid @PathVariable Long id) {
         var consumer = consumerService.getConsumer(id);
         return ResponseEntity.status(HttpStatus.OK).body(ConsumerResponse.mapConsumer(consumer));
     }

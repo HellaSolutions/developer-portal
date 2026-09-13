@@ -17,13 +17,13 @@ public class SubscriptionController {
 
     // /subscriptions/{id}/keys
     @PostMapping("/{id}/keys")
-    public ResponseEntity<ApiKeyCreateResponse> generateKey(@PathVariable Long id){
+    public ResponseEntity<ApiKeyCreateResponse> generateKey(@PathVariable Long id) {
         var key = subscriptionService.generateKey(id);
         return ResponseEntity.ok(key);
     }
 
     @DeleteMapping("/{id}/keys/{keyId}")
-    public ResponseEntity<Void> revokeSubscription(@PathVariable Long subscriptionId, @PathVariable Long keyId){
+    public ResponseEntity<Void> revokeSubscription(@PathVariable Long subscriptionId, @PathVariable Long keyId) {
         subscriptionService.revoke(subscriptionId, keyId);
         return ResponseEntity.ok().build();
     }
