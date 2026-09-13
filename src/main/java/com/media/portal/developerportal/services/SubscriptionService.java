@@ -7,6 +7,8 @@ import com.media.portal.developerportal.repositories.ApyKeyRepository;
 import com.media.portal.developerportal.repositories.ConsumerRepository;
 import com.media.portal.developerportal.repositories.SubscriptionRepository;
 import com.media.portal.developerportal.utils.TokenUtil;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,16 +22,31 @@ public class SubscriptionService {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriptionService.class);
 
+    private static final Introspection INACTIVE =
+            new Introspection(false, null, null, null, null);
+
     private final ConsumerRepository consumerRepository;
     private final ApiRepository apiRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final ApyKeyRepository apikeyRepository;
 
-    public SubscriptionService(ConsumerRepository consumerRepository, ApiRepository apiRepository, SubscriptionRepository subscriptionRepository, ApyKeyRepository apikeyRepository) {
+    private final Counter introspectActive;
+    private final Counter introspectInactive;
+
+    public SubscriptionService(ConsumerRepository consumerRepository, ApiRepository apiRepository, SubscriptionRepository subscriptionRepository, ApyKeyRepository apikeyRepository, MeterRegistry meterRegistry) {
         this.consumerRepository = consumerRepository;
         this.apiRepository = apiRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.apikeyRepository = apikeyRepository;
+
+        this.introspectActive = Counter.builder("portal.introspection")
+                .description("Introspection results")
+                .tag("active", "true")
+                .register(meterRegistry);
+        this.introspectInactive = Counter.builder("portal.introspection")
+                .description("Introspection results")
+                .tag("active", "false")
+                .register(meterRegistry);
     }
 
     @Transactional
@@ -51,6 +68,7 @@ public class SubscriptionService {
         subscription.setPlan(plan);
         subscription.setStatus(SubscriptionStatus.ACTIVE);
         var savedSubscription = subscriptionRepository.save(subscription);
+
         return savedSubscription.getId();
     }
 
@@ -107,7 +125,7 @@ public class SubscriptionService {
         var opt = apikeyRepository.findIntrospectionByKeyHash(keyHash);
         var active = false;
         if (opt.isEmpty()) {
-            return new Introspection(false, null, null, null, null);
+            return inactive();
         }
         var introspection = opt.get();
         var revokedAt = introspection.getRevokedAt();
@@ -119,12 +137,18 @@ public class SubscriptionService {
             active =  apiStatus == ApiStatus.PUBLISHED && subscriptionStatus == SubscriptionStatus.ACTIVE;
         }
         if (!active) {
-            return new Introspection(false, null, null, null, null);
+            return inactive();
         }
+        introspectActive.increment();
         var consumerId = introspection.getConsumerId();
         var apiId = introspection.getApiId();
         var plan = introspection.getPlan();
         var basePath = introspection.getBasePath();
         return new Introspection(active, consumerId, apiId, basePath, plan);
+    }
+
+    private Introspection inactive() {
+        introspectInactive.increment();
+        return INACTIVE;
     }
 }

@@ -20,9 +20,9 @@ public interface ApiRepository extends JpaRepository<Api, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
        UPDATE Api a
-          SET s.status = :newStatus
-        WHERE s.api.id = :apiId
-          AND s.status = :currentStatus
+          SET a.status = :newStatus
+        WHERE a.id = :apiId
+          AND a.status = :currentStatus
        """)
     int updateApiStatus(@Param("apiId") Long apiId,
                            @Param("currentStatus") ApiStatus currentStatus,
