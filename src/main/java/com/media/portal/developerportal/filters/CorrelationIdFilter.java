@@ -1,6 +1,5 @@
 package com.media.portal.developerportal.filters;
 
-import com.media.portal.developerportal.controllers.ApiController;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +27,7 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    FilterChain chain)
+                                    @NonNull FilterChain chain)
             throws ServletException, IOException {
 
         var correlationId = request.getHeader(CORRELATION_ID);

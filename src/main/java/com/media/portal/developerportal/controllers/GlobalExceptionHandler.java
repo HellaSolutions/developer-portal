@@ -1,7 +1,9 @@
 package com.media.portal.developerportal.controllers;
 
 import com.media.portal.developerportal.model.IllegalStateTransitionException;
+import com.media.portal.developerportal.services.ConflictException;
 import com.media.portal.developerportal.services.ResourceNotFoundException;
+import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -84,6 +86,34 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleIllegalStateTransitionException(IllegalStateTransitionException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
                 HttpStatus.CONFLICT,
+                ex.getMessage()
+        );
+
+        problemDetail.setTitle("Conflict");
+        problemDetail.setType(URI.create("https://api.example.com/errors/conflict-request"));
+        problemDetail.setProperty("timestamp", Instant.now());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ProblemDetail handleConflictException(ConflictException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                ex.getMessage()
+        );
+
+        problemDetail.setTitle("Conflict");
+        problemDetail.setType(URI.create("https://api.example.com/errors/conflict-request"));
+        problemDetail.setProperty("timestamp", Instant.now());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ProblemDetail handleBadRequestException(IllegalStateTransitionException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
                 ex.getMessage()
         );
 

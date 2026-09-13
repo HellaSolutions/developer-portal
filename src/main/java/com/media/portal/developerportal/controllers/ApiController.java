@@ -2,14 +2,13 @@ package com.media.portal.developerportal.controllers;
 
 
 import com.media.portal.developerportal.controllers.dto.CreateApiRequest;
-import com.media.portal.developerportal.controllers.dto.ResponseApi;
+import com.media.portal.developerportal.controllers.dto.ApiResponse;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.model.ApiStatus;
 import com.media.portal.developerportal.services.ApiService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,17 +55,17 @@ public class ApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseApi>> listApis(
+    public ResponseEntity<List<ApiResponse>> listApis(
             @RequestParam(required = false) ApiStatus status,
             Pageable pageable) {
-        List<ResponseApi> apis = apiService.listApis(status, pageable).
-                stream().map(ResponseApi::mapApi).toList();
+        List<ApiResponse> apis = apiService.listApis(status, pageable).
+                stream().map(ApiResponse::mapApi).toList();
         return ResponseEntity.ok(apis);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseApi> getApi(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getApi(@PathVariable Long id) {
         Api api = apiService.getApi(id);
-        return ResponseEntity.ok(ResponseApi.mapApi(api));
+        return ResponseEntity.ok(ApiResponse.mapApi(api));
     }
 }
