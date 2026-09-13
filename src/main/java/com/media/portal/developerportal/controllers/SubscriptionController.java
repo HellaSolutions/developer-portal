@@ -3,10 +3,10 @@ package com.media.portal.developerportal.controllers;
 import com.media.portal.developerportal.controllers.dto.ApiKeyCreateResponse;
 import com.media.portal.developerportal.services.SubscriptionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/v1/subscriptions")
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;

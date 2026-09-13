@@ -104,4 +104,33 @@ public class SubscriptionService {
             apiKey.setRevokedAt(Instant.now());
         }
     }
+
+    public Introspection introspect(String rawKey) {
+
+        var keyHash = TokenUtil.sha256(rawKey);
+        var opt = apikeyRepository.findIntrospectionByKeyHash(keyHash);
+        var active = false;
+        if (opt.isEmpty()) {
+            return new Introspection(false, null, null, null, null);
+        }
+        var introspection = opt.get();
+        var revokedAt = introspection.getRevokedAt();
+        var expiresAt = introspection.getExpiresAt();
+        var subscriptionStatus = introspection.getSubStatus();
+        var apiStatus = introspection.getApiStatus();
+        active = revokedAt == null && (expiresAt == null || expiresAt.isAfter(Instant.now()));
+        if (active) {
+            active =  apiStatus == ApiStatus.PUBLISHED && subscriptionStatus == SubscriptionStatus.ACTIVE;
+        }
+        if (!active) {
+            return new Introspection(false, null, null, null, null);
+        }
+        var consumerId = introspection.getConsumerId();
+        var apiId = introspection.getApiId();
+        var plan = introspection.getPlan();
+        var basePath = introspection.getBasePath();
+        return new Introspection(active, consumerId, apiId, basePath, plan);
+    }
+
+
 }

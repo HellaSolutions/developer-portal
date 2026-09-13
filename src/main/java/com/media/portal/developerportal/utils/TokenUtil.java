@@ -20,7 +20,7 @@ public class TokenUtil {
         return new TokenPair(plainToken, hashedToken);
     }
 
-    private static String sha256(String input) {
+    public static String sha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
