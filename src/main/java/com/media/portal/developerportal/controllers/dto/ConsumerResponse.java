@@ -1,6 +1,5 @@
 package com.media.portal.developerportal.controllers.dto;
 
-import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.model.Consumer;
 
 public record ConsumerResponse(String name, String email, String organisation) {

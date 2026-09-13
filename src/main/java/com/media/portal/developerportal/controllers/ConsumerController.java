@@ -44,9 +44,7 @@ public class ConsumerController {
                 .body(id);
     }
 
-
-
-        @GetMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ConsumerResponse> getConsumer(@Valid @PathVariable Long id){
         var consumer = consumerService.getConsumer(id);
         return ResponseEntity.status(HttpStatus.OK).body(ConsumerResponse.mapConsumer(consumer));
