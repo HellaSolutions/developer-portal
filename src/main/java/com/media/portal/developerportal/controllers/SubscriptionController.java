@@ -1,8 +1,6 @@
 package com.media.portal.developerportal.controllers;
 
-import com.media.portal.developerportal.controllers.dto.ApiResponse;
-import com.media.portal.developerportal.controllers.dto.CreateKeyResponse;
-import com.media.portal.developerportal.services.ResourceNotFoundException;
+import com.media.portal.developerportal.controllers.dto.ApiKeyCreateResponse;
 import com.media.portal.developerportal.services.SubscriptionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +17,7 @@ public class SubscriptionController {
 
     // /subscriptions/{id}/keys
     @PostMapping("/{id}/keys")
-    public ResponseEntity<CreateKeyResponse> generateKey(@PathVariable Long id){
+    public ResponseEntity<ApiKeyCreateResponse> generateKey(@PathVariable Long id){
         var key = subscriptionService.generateKey(id);
         return ResponseEntity.ok(key);
     }
