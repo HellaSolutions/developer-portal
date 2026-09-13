@@ -36,5 +36,6 @@ public class TokenUtil {
         }
     }
 
-    public record TokenPair(String plainToken, String hashedToken) {}
+    public record TokenPair(String plainToken, String hashedToken) {
+    }
 }

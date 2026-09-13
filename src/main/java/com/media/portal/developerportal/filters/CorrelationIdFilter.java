@@ -31,7 +31,7 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         var correlationId = request.getHeader(CORRELATION_ID);
-        if (correlationId == null || correlationId.isBlank()){
+        if (correlationId == null || correlationId.isBlank()) {
             correlationId = UUID.randomUUID().toString();
         }
         MDC.put(CORRELATION_ID, correlationId);

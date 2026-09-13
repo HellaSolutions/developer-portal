@@ -77,7 +77,7 @@ public class Api {
         return uuid;
     }
 
-    public void publish(){
+    public void publish() {
         var legal = this.status == ApiStatus.DRAFT;
         if (!legal) {
             throw new IllegalStateTransitionException(
@@ -90,7 +90,7 @@ public class Api {
         this.status = ApiStatus.PUBLISHED;
     }
 
-    public void deprecate(){
+    public void deprecate() {
         var legal = this.status == ApiStatus.PUBLISHED;
         if (!legal) {
             throw new IllegalStateTransitionException(

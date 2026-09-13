@@ -63,16 +63,16 @@ public class SubscriptionService {
 
         var subscription = subscriptionRepository.findByIdForUpdate(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Subscription not found, id %s", id)));
-        if (subscription.getStatus() != SubscriptionStatus.ACTIVE){
+        if (subscription.getStatus() != SubscriptionStatus.ACTIVE) {
             throw new BadRequestException(String.format("Subscription is not ACTIVE, id %s", id));
         }
         //apiKeys is not a large list
         var apiKeys = apikeyRepository.findBySubscription(subscription);
         apiKeys = apiKeys.stream().filter(k ->
-            k.getRevokedAt() == null &&
-                    (k.getExpiresAt() == null || k.getExpiresAt().isAfter(Instant.now()))
+                k.getRevokedAt() == null &&
+                        (k.getExpiresAt() == null || k.getExpiresAt().isAfter(Instant.now()))
         ).toList();
-        if (apiKeys.size() >= 2){
+        if (apiKeys.size() >= 2) {
             throw new ConflictException(String.format("You cannot hold more that 2 API keys, id %s", id));
         }
         var token = TokenUtil.generateToken();
@@ -100,7 +100,7 @@ public class SubscriptionService {
         if (!apiKey.getSubscription().getId().equals(subscriptionId)) {
             throw new ResourceNotFoundException(String.format(String.format("API key not found, id %s", keyId)));
         }
-        if (apiKey.getRevokedAt() == null){
+        if (apiKey.getRevokedAt() == null) {
             apiKey.setRevokedAt(Instant.now());
         }
     }
