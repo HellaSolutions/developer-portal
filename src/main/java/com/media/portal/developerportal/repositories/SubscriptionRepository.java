@@ -3,6 +3,7 @@ package com.media.portal.developerportal.repositories;
 import com.media.portal.developerportal.model.Api;
 import com.media.portal.developerportal.model.Consumer;
 import com.media.portal.developerportal.model.Subscription;
+import com.media.portal.developerportal.model.SubscriptionStatus;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -16,6 +17,8 @@ import java.util.Optional;
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
     Optional<Subscription> findByConsumerAndApi(Consumer consumer, Api api);
+
+    boolean existsByConsumerAndApiAndStatusNot(Consumer consumer, Api api, SubscriptionStatus status);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Subscription s WHERE s.id = :id")

@@ -23,7 +23,7 @@ public class SubscriptionService {
     private final ConsumerRepository consumerRepository;
     private final ApiRepository apiRepository;
     private final SubscriptionRepository subscriptionRepository;
-    public final ApyKeyRepository apikeyRepository;
+    private final ApyKeyRepository apikeyRepository;
 
     public SubscriptionService(ConsumerRepository consumerRepository, ApiRepository apiRepository, SubscriptionRepository subscriptionRepository, ApyKeyRepository apikeyRepository) {
         this.consumerRepository = consumerRepository;
@@ -42,12 +42,8 @@ public class SubscriptionService {
         if (api.getStatus() != ApiStatus.PUBLISHED) {
             throw new BadRequestException(String.format("API with id %s is not in %s", apiId, ApiStatus.PUBLISHED));
         }
-        var opt = subscriptionRepository.findByConsumerAndApi(consumer, api);
-        if (opt.isPresent()) {
-            var oldSubscription = opt.get();
-            if (oldSubscription.getStatus() != SubscriptionStatus.REVOKED) {
+        if (subscriptionRepository.existsByConsumerAndApiAndStatusNot(consumer, api, SubscriptionStatus.REVOKED)) {
                 throw new ConflictException("Subscription exists and has been not revoked");
-            }
         }
         var subscription = new Subscription();
         subscription.setApi(api);
@@ -80,7 +76,7 @@ public class SubscriptionService {
         var hashed = token.hashedToken();
         var apiKey = new ApiKey();
         apiKey.setSubscription(subscription);
-        if (plain.length() < 35) {
+        if (plain.length() != 35) {
             throw new IllegalStateException("Invalid API token, wrong length");
         }
         apiKey.setPrefix(plain.substring(0, 8));
@@ -98,7 +94,7 @@ public class SubscriptionService {
         var apiKey = apikeyRepository.findByIdForUpdate(keyId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("API key not found, id %s", keyId)));
         if (!apiKey.getSubscription().getId().equals(subscriptionId)) {
-            throw new ResourceNotFoundException(String.format(String.format("API key not found, id %s", keyId)));
+            throw new ResourceNotFoundException(String.format("API key not found, id %s", keyId));
         }
         if (apiKey.getRevokedAt() == null) {
             apiKey.setRevokedAt(Instant.now());
