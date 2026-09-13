@@ -94,7 +94,7 @@ public class Api {
         var legal = this.status == ApiStatus.PUBLISHED;
         if (!legal) {
             throw new IllegalStateTransitionException(
-                    String.format("Illegal transition for API status %s -> %s", this.status, ApiStatus.DEPRECATED));
+                    String.format("Illegal transition for API %s status %s -> %s", this.name, this.status, ApiStatus.DEPRECATED));
         }
         this.status = ApiStatus.DEPRECATED;
     }
