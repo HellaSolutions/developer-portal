@@ -2,6 +2,7 @@ package com.media.portal.developerportal.controllers;
 
 import com.media.portal.developerportal.controllers.dto.ApiKeyCreateResponse;
 import com.media.portal.developerportal.services.SubscriptionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +20,12 @@ public class SubscriptionController {
     @PostMapping("/{id}/keys")
     public ResponseEntity<ApiKeyCreateResponse> generateKey(@PathVariable Long id) {
         var key = subscriptionService.generateKey(id);
-        return ResponseEntity.ok(key);
+        return ResponseEntity.status(HttpStatus.CREATED).body(key);
     }
 
     @DeleteMapping("/{id}/keys/{keyId}")
-    public ResponseEntity<Void> revokeSubscription(@PathVariable Long subscriptionId, @PathVariable Long keyId) {
-        subscriptionService.revoke(subscriptionId, keyId);
+    public ResponseEntity<Void> revokeSubscription(@PathVariable Long id, @PathVariable Long keyId) {
+        subscriptionService.revoke(id, keyId);
         return ResponseEntity.ok().build();
     }
 }

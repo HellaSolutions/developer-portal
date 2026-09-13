@@ -11,13 +11,15 @@ public class TokenUtil {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder().withoutPadding();
 
-    public static TokenPair generateToken() {
-        byte[] randomBytes = new byte[32];
-        secureRandom.nextBytes(randomBytes);
-        String plainToken = base64Encoder.encodeToString(randomBytes);
+    private static final String PREFIX = "pk_";
+    private static final int RANDOM_BYTES = 24;   // 24 bytes -> exactly 32 Base64url chars
 
-        String hashedToken = sha256(plainToken);
-        return new TokenPair(plainToken, hashedToken);
+    public static TokenPair generateToken() {
+        byte[] randomBytes = new byte[RANDOM_BYTES];
+        secureRandom.nextBytes(randomBytes);
+
+        String plainToken = PREFIX + base64Encoder.encodeToString(randomBytes);
+        return new TokenPair(plainToken, sha256(plainToken));
     }
 
     public static String sha256(String input) {
