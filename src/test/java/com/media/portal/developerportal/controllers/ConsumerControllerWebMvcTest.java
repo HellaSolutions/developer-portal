@@ -1,5 +1,6 @@
 package com.media.portal.developerportal.controllers;
 
+import com.media.portal.developerportal.config.SecurityConfig;
 import com.media.portal.developerportal.model.SubscriptionType;
 import com.media.portal.developerportal.services.BadRequestException;
 import com.media.portal.developerportal.services.ConflictException;
@@ -8,7 +9,9 @@ import com.media.portal.developerportal.services.ResourceNotFoundException;
 import com.media.portal.developerportal.services.SubscriptionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * calls controller methods directly in Java and bypasses the dispatcher.
  */
 @WebMvcTest(ConsumerController.class)
+@Import(SecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 class ConsumerControllerWebMvcTest {
 
     @Autowired

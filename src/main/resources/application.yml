@@ -1,6 +1,11 @@
 spring:
   application:
     name: "developer-portal"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://auth.elsevier.com/realms/platform
   jpa:
     hibernate:
       ddl-auto: "validate"
@@ -11,3 +16,5 @@ logging:
       console: ecs
   level:
     com.media.portal: DEBUG
+
+
