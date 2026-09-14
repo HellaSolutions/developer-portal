@@ -36,7 +36,7 @@ public class ConsumerController {
     }
 
     @PostMapping("/{id}/subscriptions")
-    public ResponseEntity<Long> subscribeApi(@PathVariable Long consumerId, @Valid @RequestBody SubscriptionCreateRequest request) {
+    public ResponseEntity<Long> subscribeApi(@PathVariable("id") Long consumerId, @Valid @RequestBody SubscriptionCreateRequest request) {
         var id = subscriptionService.createSubscription(consumerId, request.apiId(), request.plan());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Location", id.toString())
