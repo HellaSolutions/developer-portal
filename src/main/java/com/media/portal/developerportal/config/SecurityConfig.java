@@ -57,7 +57,8 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").hasAuthority("SCOPE_portal:admin")
                         // DEv
                         // .requestMatchers("/actuator/**").permitAll()
-                );
+
+                ).oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
