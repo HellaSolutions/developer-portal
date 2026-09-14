@@ -1,8 +1,9 @@
-security:
-  oauth2:
-    resourceserver:
-      jwt:
-        public-key-location: classpath:jwt-public.pem
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:jwt-public.pem
 
 management:
   newrelic:
