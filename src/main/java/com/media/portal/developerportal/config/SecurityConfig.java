@@ -3,6 +3,7 @@ package com.media.portal.developerportal.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,17 @@ public class SecurityConfig {
     private String gatewayKey;
 
     @Bean
+    @Order(0)
+    @Profile("dev")
+    SecurityFilterChain swaggerChain(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(a -> a.anyRequest().permitAll())
+                .build();
+    }
+
+    @Bean
     @Order(1)
     SecurityFilterChain introspectChain(HttpSecurity http) throws Exception {
         return http
@@ -33,14 +45,24 @@ public class SecurityConfig {
                 .build();
     }
 
+
     @Bean
     @Order(2)
-    SecurityFilterChain healthChain(HttpSecurity http) throws Exception {
-        return http
-                .securityMatcher("/actuator/health/**")
+    public SecurityFilterChain auditFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/actuator/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(a -> a.anyRequest().permitAll())
-                .build();
+                .authorizeHttpRequests(auth -> auth
+                        // Allow Kubernetes to read health probes without authentication
+                        .requestMatchers("/actuator/health/**", "/actuator/readiness/**").permitAll()
+                        .requestMatchers("/actuator/**").hasRole("SCOPE_portal:admin")
+                        // Option B: Allow public/internal access (if behind a secure private network)
+                        // .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults());
+
+        return http.build();
     }
 
     @Bean
