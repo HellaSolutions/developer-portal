@@ -53,14 +53,11 @@ public class SecurityConfig {
                 .securityMatcher("/actuator/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Allow Kubernetes to read health probes without authentication
-                        .requestMatchers("/actuator/health/**", "/actuator/readiness/**").permitAll()
-                        .requestMatchers("/actuator/**").hasRole("SCOPE_portal:admin")
-                        // Option B: Allow public/internal access (if behind a secure private network)
+                        .requestMatchers("/actuator/health/**").permitAll()
+                        .requestMatchers("/actuator/**").hasAuthority("SCOPE_portal:admin")
+                        // DEv
                         // .requestMatchers("/actuator/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults());
+                );
 
         return http.build();
     }
