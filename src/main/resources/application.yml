@@ -4,11 +4,6 @@ server:
 spring:
   application:
     name: "developer-portal"
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://auth.elsevier.com/realms/platform
   lifecycle:
     timeout-per-shutdown-phase: 25s
   jpa:
@@ -39,3 +34,15 @@ logging:
   level:
     com.media.portal: INFO
 
+---
+# real issuer discovery for non-local environments; the dev profile pins a static
+# public key (jwt-public.pem) instead, so this must not apply there.
+spring:
+  config:
+    activate:
+      on-profile: '!dev'
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://auth.elsevier.com/realms/platform
