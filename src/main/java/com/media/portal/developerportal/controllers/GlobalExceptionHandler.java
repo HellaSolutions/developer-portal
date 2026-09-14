@@ -1,9 +1,9 @@
 package com.media.portal.developerportal.controllers;
 
 import com.media.portal.developerportal.model.IllegalStateTransitionException;
+import com.media.portal.developerportal.services.BadRequestException;
 import com.media.portal.developerportal.services.ConflictException;
 import com.media.portal.developerportal.services.ResourceNotFoundException;
-import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ProblemDetail handleBadRequestException(IllegalStateTransitionException ex) {
+    public ProblemDetail handleBadRequestException(BadRequestException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()
