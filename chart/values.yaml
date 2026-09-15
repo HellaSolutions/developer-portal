@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: developer-portal
+  tag: local
+  pullPolicy: IfNotPresent
+
+service:
+  port: 8080
+
+profile: dev
+
+datasource:
+  url: jdbc:postgresql://postgres:5432/developer_portal
+  secretName: portal-db          # keys: username, password
+
+gatewayKey:
+  secretName: portal-gateway-key # key: gateway-key
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    memory: 768Mi                # no CPU limit — see notes
+
+terminationGracePeriodSeconds: 40
+preStopSleepSeconds: 5
